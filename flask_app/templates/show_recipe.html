@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Users</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-200 text-black">
+    <div id="login_reg_backdrop" class="hidden fixed inset-0 bg-black bg-opacity-80 z-20"></div>
+    <div id="nav_bar" class="bg-white py-2 w-full shadow-lg sticky top-0 z-10">
+        <ul class="flex items-center justify-evenly">
+            <img onclick="window.location.href='/'" src="{{ url_for('static', filename='images/recipe_logo.jpeg') }}" class="w-12 h-12 cursor-pointer" alt="site logo">
+            <h1 class="text-4xl">Recipe Share</h1>
+            <div class="relative " id="dropdown_menu">
+                <img src="{{ url_for('static', filename='images/smiley_face.png') }}" class="w-16 h-16" id="hover_smiley" alt="smiley face signin dropdown">
+                <ul id="smile_dropdown" class="absolute hidden  bg-gray-50 shadlow-lg py-2 px-3 w-40 ">
+                    <li class="hover:text-blue-400 cursor-pointer" onclick="login_form(this)">Sign Up</li>
+                    <li class="hover:text-blue-400 cursor-pointer" onclick="login_form(this)">Log In</li>
+                    <li class="hover:text-blue-400 cursor-pointer">Log Out</li>
+                    <li class="hover:text-blue-400 cursor-pointer">Recipes</li>
+                </ul>
+            </div>
+            
+        </ul>
+        
+    </div>
+    <div id="black_backdrop" class="hidden bg-black bg-opacity-20 absolute left-0 top-0 bottom-0 right-0 h-full w-full"></div>
+    <div id="main_content" class="w-2/5 mx-auto mt-16 text-gray-800">
+        <div class="flex items-center justify-between  pr-10">
+            <h2 class="text-4xl font-semibold mb-6 rounded-lg">Recipe Name Here</h2>
+            <h3>Posted by: You</h3>
+        </div>
+        <div class="border-2 border-gray-500 bg-gray-100 space-y-4 p-4">
+            <div class="flex gap-2">
+                <h3 class="w-1/3">Description</h3>
+                <p class="w-2/3">This is what it's like</p>
+            </div>
+            <div class="flex gap-2">
+                <h3 class="w-1/3">Under 30 Minutes?</h3>
+                <p class="w-2/3">No</p>
+            </div>
+            <div class="flex gap-2">
+                <h3 class="w-1/3">Instructions:</h3>
+                <p class="w-2/3">Here is where long winded instructions will be written by stay at home mommies and daddies who think we want to hear their whole life story before they tell us how to make the actual recipe...</p>
+            </div>
+            <div class="flex gap-2">
+                <h3 class="w-1/3">Date Made:</h3>
+                <p class="w-2/3">May 10th, 2019</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<!-- Format for adding images -->
+<!-- <img src="{{ url_for('static', filename='images/img.png') }}"> -->

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Users</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-200 text-black">
+    <div id="login_reg_backdrop" class="hidden fixed inset-0 bg-black bg-opacity-80 z-20"></div>
+    <div id="nav_bar" class="bg-white py-2 w-full shadow-lg sticky top-0 z-10">
+        <ul class="flex items-center justify-evenly">
+            <img onclick="window.location.href='/'" src="{{ url_for('static', filename='images/recipe_logo.jpeg') }}" class="w-12 h-12 cursor-pointer" alt="site logo">
+            <h1 class="text-4xl">Recipe Share</h1>
+            <div class="relative " id="dropdown_menu">
+                <img src="{{ url_for('static', filename='images/smiley_face.png') }}" class="w-16 h-16" id="hover_smiley" alt="smiley face signin dropdown">
+                <ul id="smile_dropdown" class="absolute hidden  bg-gray-50 shadlow-lg py-2 px-3 w-40 ">
+                    <li class="hover:text-blue-400 cursor-pointer" onclick="login_form(this)">Sign Up</li>
+                    <li class="hover:text-blue-400 cursor-pointer" onclick="login_form(this)">Log In</li>
+                </ul>
+            </div>
+            
+        </ul>
+        
+    </div>
+    <div id="black_backdrop" class="hidden bg-black bg-opacity-20 absolute left-0 top-0 bottom-0 right-0 h-full w-full"></div>
+    <div id="main_content" class="w-2/3 mx-auto mt-4 ">
+
+            
+            <!-- Register and Login, switch with JS -->
+            <div id="login_reg_form_div" class="hidden z-30 absolute bg-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-10 rounded-lg">
+                <svg onclick="exit_login_reg()" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#c6c6c6" class="bi bi-x-circle-fill cursor-pointer absolute top-4 right-6" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                </svg>
+                <div id="user_login" class="hidden">
+                    <p class="text-black text-4xl text-center font-semibold mb-8">Log In</p>
+                    <form action="/user/login/registraion" method="post" id="login_form" class="text-gray-700 space-y-12 w-96">
+                        <input type="hidden" name="which_form" value="login_form">
+                        <input type="email" name="email" placeholder="Email" class="block w-full border-b-2 border-gray-400 outline-none">
+                        <input type="text" name="password" placeholder="Password" class="block w-full border-b-2 border-gray-400 outline-none">
+                        <button type="submit" class="w-full rounded-full text-white text-xs bg-rose-500 hover:bg-rose-400 py-2 mt-4">Log In</button>
+                    </form>
+                    <p class="mt-12 text-sm">Need an account? Click <span class="text-blue-600 cursor-pointer" onclick="change_login_reg()">here</span></p>
+                </div>
+                <div id="user_register" class="hidden">
+                    <p class="text-black text-4xl text-center font-semibold mb-8">Register</p>
+                    <form action="/user/login/registraion" method="post" id="login_form" class="text-gray-700 space-y-12 w-96">
+                        <input type="hidden" name="which_form" value="registration_form">
+                        <input type="text" name="first_name" placeholder="First Name" class="block w-full border-b-2 border-gray-400 outline-none">
+                        <input type="text" name="last_name" placeholder="Last Name" class="block w-full border-b-2 border-gray-400 outline-none">
+                        <input type="email" name="email" placeholder="Email" class="block w-full border-b-2 border-gray-400 outline-none">
+                        <input type="text" name="password" placeholder="Password" class="block w-full border-b-2 border-gray-400 outline-none">
+                        <input type="text" name="confirm_password" placeholder="Confirm Password" class="block w-full border-b-2 border-gray-400 outline-none">
+                        <button type="submit" class="w-full rounded-full text-white text-xs bg-rose-500 hover:bg-rose-400 py-2 mt-4">Sign Up</button>
+                    </form>
+                    <p class="mt-12 text-sm">Already have an account? Click <span class="text-blue-600 cursor-pointer" onclick="change_login_reg()">here</span></p>
+                </div>
+            </div>
+        
+    </div>
+</body>
+</html>
+
+<!-- Format for adding images -->
+<!-- <img src="{{ url_for('static', filename='images/img.png') }}"> -->
