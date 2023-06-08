@@ -3,34 +3,28 @@ from flask import render_template, redirect, request, session
 from flask_app.models import user # import entire file, rather than class, to avoid circular imports
 
 # Create Users Controller
-@app.route('/user/login/registraion', methods=['POST'])
+@app.route('/user/login_reg', methods=['POST'])
 def user_login_registration():
-    print(request.form)
-    return redirect('/recipes')
+    if request.form['which_form'] == 'registration_form':
+        if user.User.create_user(request.form):
+            return redirect('/recipes')
+        registration_info = {
+            'first_name': request.form['first_name'],
+            'last_name' : request.form['last_name'],
+            'email' : request.form['email']
+        }
+        return render_template('home.html', registration_info = registration_info)
+    if user.User.validate_login(request.form):
+        return redirect('/recipes')
+    return render_template('home.html', login_email = request.form['email'], registration_info = None)
 
 
 # Read Users Controller
 
-@app.route('/')
-def home_page():
-    return render_template('home.html')
-
-@app.route('/recipes')
-def profile_page():
-    return render_template('recipes.html')
-
-@app.route('/recipes/new')
-def show_new_recipes_page():
-    return render_template('new_recipe.html')
-
-@app.route('/recipes/<int:recipe_id>')
-def show_one_recipe(recipe_id):
-    return render_template('show_recipe.html')
-
-@app.route('/recipes/edit/<int:recipe_id>')
-def update_recipe_page(recipe_id):
-    return render_template('edit_recipe.html')
-
+@app.route('/user/logout')
+def user_logout():
+    session.clear()
+    return redirect('/')
 
 
 # Update Users Controller

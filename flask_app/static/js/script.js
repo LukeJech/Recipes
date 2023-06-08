@@ -15,7 +15,7 @@ dropdown_menu.addEventListener('mouseout', () => {
 
 
 // login button clicked
-function login_form(element) {
+function login_form_reg(element) {
 
     login_reg_backdrop.classList.remove('hidden')
     login_reg_form_div.classList.remove('hidden')
