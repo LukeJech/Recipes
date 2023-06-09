@@ -21,10 +21,9 @@
             <div class="relative " id="dropdown_menu">
                 <img src="{{ url_for('static', filename='images/smiley_face.png') }}" class="w-16 h-16" id="hover_smiley" alt="smiley face signin dropdown">
                 <ul id="smile_dropdown" class="absolute hidden  bg-gray-50 shadlow-lg py-2 px-3 w-40 ">
-                    <li class="hover:text-blue-400 cursor-pointer" onclick="login_form_reg(this)">Sign Up</li>
-                    <li class="hover:text-blue-400 cursor-pointer" onclick="login_form_reg(this)">Log In</li>
-                    <li class="hover:text-blue-400 cursor-pointer">Log Out</li>
-                    <li class="hover:text-blue-400 cursor-pointer">Recipes</li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes">Recipes</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/user/logout">Log Out</a></li>
+                    
                 </ul>
             </div>
             
@@ -34,25 +33,26 @@
     <div id="black_backdrop" class="hidden bg-black bg-opacity-20 absolute left-0 top-0 bottom-0 right-0 h-full w-full"></div>
     <div id="main_content" class="w-2/5 mx-auto mt-16 text-gray-800">
         <div class="flex items-center justify-between  pr-10">
-            <h2 class="text-4xl font-semibold mb-6 rounded-lg">Recipe Name Here</h2>
-            <h3>Posted by: You</h3>
+            <h2 class="text-4xl font-semibold mb-6 rounded-lg">{{recipe.name}}</h2>
+            <h3>Posted by: {{recipe.creator.first_name}} {{recipe.creator.last_name}}</h3>
         </div>
         <div class="border-2 border-gray-500 bg-gray-100 space-y-4 p-4">
             <div class="flex gap-2">
                 <h3 class="w-1/3">Description</h3>
-                <p class="w-2/3">This is what it's like</p>
+                <p class="w-2/3 whitespace-normal break-all">{{recipe.description}}</p>
             </div>
             <div class="flex gap-2">
                 <h3 class="w-1/3">Under 30 Minutes?</h3>
-                <p class="w-2/3">No</p>
+                <p class="w-2/3 ">{{recipe.under_30}}</p>
             </div>
             <div class="flex gap-2">
                 <h3 class="w-1/3">Instructions:</h3>
-                <p class="w-2/3">Here is where long winded instructions will be written by stay at home mommies and daddies who think we want to hear their whole life story before they tell us how to make the actual recipe...</p>
+                <p class="w-2/3 whitespace-normal break-all">{{recipe.instructions}}</p>
             </div>
             <div class="flex gap-2">
                 <h3 class="w-1/3">Date Made:</h3>
-                <p class="w-2/3">May 10th, 2019</p>
+                <p class="w-2/3">{{ recipe.date_made}}</p>
+
             </div>
         </div>
     </div>

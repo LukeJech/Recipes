@@ -11,17 +11,26 @@ bcrypt = Bcrypt(app)
 class User:
     db = "recipes_db" #which database are you using for this project
     def __init__(self, data):
-        self.id = data['id']
-        self.first_name = data['first_name']
-        self.last_name = data['last_name']
-        self.email = data['email']
-        self.password = data['password']
-        self.created_at = data['created_at']
-        self.updated_at = data['updated_at']
+        if 'users.id' in data:
+            self.id = data['users.id']
+            self.first_name = data['first_name']
+            self.last_name = data['last_name']
+            self.email = data['email']
+            self.password = data['password']
+            self.created_at = data['users.created_at']
+            self.updated_at = data['users.updated_at']
+        else:
+            self.id = data['id']
+            self.first_name = data['first_name']
+            self.last_name = data['last_name']
+            self.email = data['email']
+            self.password = data['password']
+            self.created_at = data['created_at']
+            self.updated_at = data['updated_at']
         # What changes need to be made above for this project?
         #What needs to be added her for class association?
         self.recipes = []
-        self.favorites = []
+        self.recipe_favorites = []
 
 
     # Create Users Models
@@ -29,7 +38,9 @@ class User:
     def create_user(cls, user_data):
         if not cls.validate_user_data(user_data):
             return False
-        user_data = cls.parse_registration_data(user_data)
+        # user_data = cls.parse_registration_data(user_data)
+        user_data = user_data.copy()
+        user_data['password'] = bcrypt.generate_password_hash(user_data['password'])
         query = """
         INSERT INTO users (first_name, last_name, email, password)
         VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password)s)
@@ -92,19 +103,19 @@ class User:
             flash('You have no attempts left! You must wait 30 minutes to try again')
             return False
         this_user = User.get_user_by_email(user_data['email'].lower().strip())
-        if not this_user:
-            flash("That email isn't in use")
-            return False
-        if not bcrypt.check_password_hash(this_user.password, user_data['password']):
-            if 'password_attempts' not in session:
-                session['password_attempts'] = 5
-            else:
-                session['password_attempts'] -= 1
-            flash(f"Incorrect password. You have {session['password_attempts']} more attempts!")
-            return False
-        session['user_id'] = this_user.id
-        session['first_name'] = this_user.first_name
-        return True
+        if this_user:
+            if bcrypt.check_password_hash(this_user.password, user_data['password']):  
+                session['user_id'] = this_user.id
+                session['first_name'] = this_user.first_name
+                return True
+        #login failed, take away login attempts
+        if 'password_attempts' not in session:
+            session['password_attempts'] = 5
+        else:
+            session['password_attempts'] -= 1
+        flash(f"Incorrect login. You have {session['password_attempts']} more attempts!")
+        return False
+
 
 
 
@@ -116,3 +127,4 @@ class User:
         parsed_user_data['email'] = user_data['email'].lower().strip()
         parsed_user_data['password'] =  bcrypt.generate_password_hash(user_data['password'])
         return parsed_user_data
+    

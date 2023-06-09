@@ -21,11 +21,8 @@
             <div class="relative " id="dropdown_menu">
                 <img src="{{ url_for('static', filename='images/smiley_face.png') }}" class="w-16 h-16" id="hover_smiley" alt="smiley face signin dropdown">
                 <ul id="smile_dropdown" class="absolute hidden  bg-gray-50 shadlow-lg py-2 px-3 w-40 ">
-                    <li class="hover:text-blue-400 cursor-pointer" onclick="login_form_reg(this)">Sign Up</li>
-                    <li class="hover:text-blue-400 cursor-pointer" onclick="login_form_reg(this)">Log In</li>
-                    <li class="hover:text-blue-400 cursor-pointer">Log Out</li>
-                    <li class="hover:text-blue-400 cursor-pointer">Recipes</li>
-
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes">Recipes</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/user/logout">Log Out</a></li>
                 </ul>
             </div>
             
@@ -35,19 +32,28 @@
     <div id="black_backdrop" class="hidden bg-black bg-opacity-20 absolute left-0 top-0 bottom-0 right-0 h-full w-full"></div>
     <div id="main_content" class="w-1/2 mx-auto mt-16 ">
         <h2 class="text-4xl font-semibold mb-6 rounded-lg">Add a New Recipe!</h2>
+        {% with messages = get_flashed_messages() %} 
+            {% if messages %}  
+                <p class="text-sm text-red-400 font-semibold mt-[-1rem]">Recipe Error:</p>
+                {% for message in messages %}      
+                    <p class="italic text-sm text-red-400">{{message}}</p>              
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <form action="" method="post" class="flex gap-4 rounded-lg p-8 border-2 bg-white">
+            <input type="hidden" name="user_id" value="{{session.user_id}}">
             <!-- left side of form -->
             <div class="space-y-4 flex flex-col w-2/3">
-                <input type="text" name="name" placeholder="Recipe Name" class="block w-full border-b-2 border-gray-400 outline-none p-1">
-                <textarea name="description" cols="30" rows="8" placeholder="Recipe Description" class="bg-gray-100 resize-none outline-none p-2 w-full"></textarea>
-                <textarea name="instructions"  rows="8" placeholder="Instructions" class="bg-gray-100 resize-none outline-none p-2 w-full"></textarea>
+                <input type="text" name="name" placeholder="Recipe Name" value="{% if recipe_info is defined %}{{ recipe_info.name}}{% endif %}" class="block w-full border-b-2 border-gray-400 outline-none p-1">
+                <textarea name="description" cols="30" rows="8" placeholder="Recipe Description" class="bg-gray-100 resize-none outline-none p-2 w-full">{% if recipe_info is defined %}{{ recipe_info.description}}{% endif %}</textarea>
+                <textarea name="instructions"  rows="8" placeholder="Instructions" class="bg-gray-100 resize-none outline-none p-2 w-full">{% if recipe_info is defined %}{{ recipe_info.instructions}}{% endif %}</textarea>
             </div>
             <!-- right side of form -->
             <div class="flex flex-col items-center justify-between w-1/3 text-gray-400">
                 <div class="h-full flex flex-col items-center justify-evenly">
                     <div>
                         <label for="date_input" class="block text-gray-600 mb-2">Date Made</label>
-                        <input type="date" name="date_made" id="date_input" class="outline-gray-400 p-1">
+                        <input type="date" name="date_made" id="date_input" class="outline-gray-400 p-1" value="{% if recipe_info is defined %}{{ recipe_info.date_made}}{% endif %}">
                     </div>
                     <div>
                         <p class="text-gray-600 mb-2">Under 30 minutes?</p>
