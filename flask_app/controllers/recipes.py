@@ -1,6 +1,7 @@
 from flask_app import app
 from flask import render_template, redirect, request, session
 from flask_app.models import user, recipe # import entire file, rather than class, to avoid circular imports
+import random
 
 # Create Recipe Controller
 @app.route('/recipes/new', methods=['POST', 'GET'])
@@ -18,12 +19,12 @@ def show_new_recipes_page():
 # Read Recipe Controller
 @app.route('/')
 def home_page():
-    return render_template('home.html', registration_info = None, login_email = '')
+    return render_template('home.html', random_recipe = recipe.Recipe.get_one_random_recipe_with_favorites() ,registration_info = None, login_email = '')
 
 @app.route('/recipes')
 def profile_page():
     if 'user_id' in session:
-        return render_template('recipes.html', all_recipes = recipe.Recipe.get_all_recipes_with_users())
+        return render_template('recipes.html', top_recipes = recipe.Recipe.show_top_recipes_by_favorites())
     return redirect('/')
 
 

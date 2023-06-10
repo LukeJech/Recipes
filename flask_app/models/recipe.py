@@ -13,19 +13,31 @@ bcrypt = Bcrypt(app)
 class Recipe:
     db = "recipes_db" #which database are you using for this project
     def __init__(self, data):
-        self.id = data['id']
-        self.user_id = data['user_id']
-        self.name = data['name']
-        self.description = data['description']
-        self.instructions = data['instructions']
-        self.date_made = data['date_made']
-        self.under_30 = data['under_30']
-        self.created_at = data['created_at']
-        self.updated_at = data['updated_at']
+        if 'recipe.id' in data:
+            self.id = data['recipe.id']
+            self.user_id = data['user_id']
+            self.name = data['name']
+            self.description = data['description']
+            self.instructions = data['instructions']
+            self.date_made = data['date_made']
+            self.under_30 = data['under_30']
+            self.created_at = data['recipe.created_at']
+            self.updated_at = data['recipe.updated_at']
+        else:
+            self.id = data['id']
+            self.user_id = data['user_id']
+            self.name = data['name']
+            self.description = data['description']
+            self.instructions = data['instructions']
+            self.date_made = data['date_made']
+            self.under_30 = data['under_30']
+            self.created_at = data['created_at']
+            self.updated_at = data['updated_at']
         # What changes need to be made above for this project?
         #What needs to be added her for class association?
         self.creator = None
         self.user_favorites = []
+        self.num_of_favorites = data.get('favorites_count', 0)
 
 
     # Create Recipes Models
@@ -77,6 +89,41 @@ class Recipe:
         WHERE recipes.id = %(id)s
         ;"""
         result_list = connectToMySQL(cls.db).query_db(query,data)
+        this_recipe = cls(result_list[0])
+        this_recipe.creator = user.User(result_list[0])
+        return this_recipe
+
+    @classmethod
+    def show_top_recipes_by_favorites(cls):
+        query = """
+        SELECT *,
+        (
+        SELECT COUNT(*) FROM favorites WHERE favorites.recipe_id = recipes.id
+        ) AS favorites_count
+        FROM recipes
+        ORDER BY favorites_count DESC
+        LIMIT 5;
+        ;"""
+        results = connectToMySQL(cls.db).query_db(query)
+        top_five_recipes = []
+        for row in results:
+            top_five_recipes.append(cls(row))
+        return top_five_recipes
+    
+    @classmethod
+    def get_one_random_recipe_with_favorites(cls):
+        query = """
+        SELECT recipes.*, users.*,
+        (
+            SELECT COUNT(*) FROM favorites
+            WHERE favorites.recipe_id = recipes.id
+        ) AS favorite_count
+        FROM recipes
+        JOIN users ON recipes.user_id = users.id
+        ORDER BY RAND()
+        LIMIT 1
+        ;"""
+        result_list = connectToMySQL(cls.db).query_db(query)
         this_recipe = cls(result_list[0])
         this_recipe.creator = user.User(result_list[0])
         return this_recipe

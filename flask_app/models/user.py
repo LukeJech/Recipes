@@ -4,6 +4,7 @@ from flask_app.config.mysqlconnection import connectToMySQL
 from flask import flash, session
 import re
 from flask_bcrypt import Bcrypt
+from flask_app.models import recipe
 bcrypt = Bcrypt(app)
 # The above is used when we do login registration, be sure to install flask-bcrypt: pipenv install flask-bcrypt
 
@@ -50,6 +51,18 @@ class User:
         session['user_id'] = user_id
         session['first_name'] = user_data['first_name']
         return user_id
+    
+    @classmethod
+    def create_user_favorite_recipe(cls, recipe_id):
+        data = {
+            'recipe_id':recipe_id,
+            'user_id':session['user_id']
+        }
+        query = """
+        INSERT INTO favorites (recipe_id, user_id)
+        VALUES (%(recipe_id)s, %(user_id)s)
+        ;"""
+        return connectToMySQL(cls.db).query_db(query, data)
 
 
     # Read Users Models
@@ -64,6 +77,24 @@ class User:
         if users_list:
             return cls(users_list[0])
         return False
+    
+    @classmethod
+    def get_user_favorite_recipes(cls):
+        data = {'id':session['user_id']}
+        query = """
+        SELECT * FROM users
+        JOIN favorites
+        ON favorites.user_id = users.id
+        JOIN recipes
+        ON recipes.id = favorites.recipe_id
+        WHERE users.id = %(id)s
+        ;"""
+        db_rows = connectToMySQL(cls.db).query_db(query,data)
+        this_user = cls(db_rows[0])
+        for row in db_rows:
+            this_user.recipe_favorites.append(recipe.Recipe(row))
+        return this_user.recipe_favorites
+
 
     # Update Users Models
 

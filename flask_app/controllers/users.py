@@ -18,6 +18,12 @@ def user_login_registration():
         return redirect('/recipes')
     return render_template('home.html', login_email = request.form['email'], registration_info = None)
 
+@app.route('/user/favorite/<int:recipe_id>')
+def create_favorite_recipe(recipe_id):
+    if 'user_id' in session:
+        user.User.create_user_favorite_recipe(recipe_id)
+        return redirect('/recipes')
+    return redirect('/')
 
 # Read Users Controller
 
@@ -26,7 +32,11 @@ def user_logout():
     session.clear()
     return redirect('/')
 
-
+@app.route('/user/show/favorites')
+def user_show_recipe_favorites():
+    if 'user_id' in session:
+        return render_template('user_favorites.html', favorites = user.User.get_user_favorite_recipes())
+    return redirect('/')
 # Update Users Controller
 
 
