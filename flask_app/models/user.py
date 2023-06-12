@@ -94,6 +94,19 @@ class User:
         for row in db_rows:
             this_user.recipe_favorites.append(recipe.Recipe(row))
         return this_user.recipe_favorites
+    
+    @classmethod
+    def get_user_recipes(cls, user_id):
+        data = {'id':session['user_id']}
+        query = """
+        SELECT *, 
+        (
+        SELECT COUNT(*) from favorites
+        WHERE favorites.recipe_id = recipes.id
+        ) as favorites_count
+        from recipes
+        where user_id = 2
+        ;"""
 
 
     # Update Users Models

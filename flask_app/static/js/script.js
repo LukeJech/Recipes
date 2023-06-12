@@ -38,3 +38,4 @@ function change_login_reg() {
     user_login.classList.toggle('hidden')
     user_register.classList.toggle('hidden')
 }
+

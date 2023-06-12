@@ -65,11 +65,23 @@ class Recipe:
         return cls(recipes_list[0])
 
     @classmethod
-    def get_all_recipes_with_users(cls):
-        query = """
-        SELECT * FROM recipes
+    def get_all_recipes_with_users(cls, order_by="name", sort_by="ASC"):
+        order_by = Recipe.change_order_by(order_by)
+        sort_by = Recipe.validate_sort_query(sort_by)
+        data = {
+            'order':order_by,
+            'sort' : sort_by
+        }
+        query = f"""
+        SELECT *,
+        (
+        SELECT COUNT(favorites.recipe_id) from favorites
+        WHERE recipes.id = favorites.recipe_id 
+        ) AS favorites_count
+        FROM recipes
         JOIN users 
         ON recipes.user_id = users.id
+        ORDER BY {data['order']} {data['sort']}
         ;"""
         results = connectToMySQL(cls.db).query_db(query)
         recipes = []
@@ -98,7 +110,8 @@ class Recipe:
         query = """
         SELECT *,
         (
-        SELECT COUNT(*) FROM favorites WHERE favorites.recipe_id = recipes.id
+        SELECT COUNT(*) FROM favorites 
+        WHERE favorites.recipe_id = recipes.id
         ) AS favorites_count
         FROM recipes
         ORDER BY favorites_count DESC
@@ -176,6 +189,24 @@ class Recipe:
             flash('Select if recipe is under 30 minutes or not')
             is_valid = False
         return is_valid
+    
+    @staticmethod
+    def change_order_by(order_by):
+        
+        columns = {
+            'cb' : 'first_name',
+            '30' : 'under_30',
+            'fav' : 'favorites_count',
+            'n' : 'name'
+        }
+        if order_by not in columns: return 'name'
+        return columns[order_by]
+
+
+    @staticmethod
+    def validate_sort_query(sort):
+        if sort.lower() == 'asc': return 'asc'
+        else: return 'desc'
 
     #Format Time
     @staticmethod

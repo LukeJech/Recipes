@@ -21,6 +21,7 @@
             <div class="relative " id="dropdown_menu">
                 <img src="{{ url_for('static', filename='images/smiley_face.png') }}" class="w-16 h-16" id="hover_smiley" alt="smiley face signin dropdown">
                 <ul id="smile_dropdown" class="absolute hidden  bg-gray-50 shadlow-lg py-2 px-3 w-40 ">
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes">Recipes</a></li>
                     <li class="hover:text-blue-400 cursor-pointer"><a href="/user/show/favorites">My Favorites</a></li>
                     <li class="hover:text-blue-400 cursor-pointer"><a href="/user/logout">Log Out</a></li>
                 </ul>
@@ -31,40 +32,22 @@
     </div>
     <div id="black_backdrop" class="hidden bg-black bg-opacity-20 absolute left-0 top-0 bottom-0 right-0 h-full w-full"></div>
     <div id="main_content" class="w-1/2 mx-auto mt-16 ">
-        <h2 class="text-4xl font-semibold mb-6 rounded-lg">Top Recipes</h2>
-        <div class="flex">
-            <h3 class="font-semibold text-gray-800">Most Favorited Recipes</h3>
-            <a href="/recipes/new" class="ml-16 text-blue-500 hover:text-blue-400">Create Recipe</a>
-        </div>
-        <table class="recipe_table border-2 border-black text-white text-lg w-full">
+        <h2 class="text-4xl font-semibold mb-6 rounded-lg">My Recipes</h2>
+        <table class="border-2 border-black bg-white text-gray-600 text-lg w-full">
             <thead>
-                <tr class="underline text-lg hover:bg-gray-800 hover:bg-opacity-20">
-                    <th>Name</th>
-                    <th>Under 30</th>
-                    <th># of Favorites</th>
-                    <th>Actions</th>
+                <tr class="underline text-lg hover:bg-gray-300 hover:bg-opacity-20">
+                    <th><a href="/recipes/all/n/{{sort}}" >Name</a> </th>
+                    <th><a href="/recipes/all/30/{{sort}}">Under 30 Mins</a> </th>
+                    <th><a href="/recipes/all/cb/{{sort}}">Created By</a></th>
+                    <th><a href="/recipes/all/fav/{{sort}}"># of Favorites</a></th>
                 </tr>
             </thead>
             <tbody>
-                {% for recipe in top_recipes %}
-                <tr class="text-center hover:bg-gray-800 hover:bg-opacity-20">
-                    <td class="font-bold">{{recipe.name}}</td>
+                {% for recipe in all_recipes %}
+                <tr class="text-center hover:bg-gray-300 hover:bg-opacity-20">
+                    <td class="font-bold"><a href="/recipes/{{recipe.id}}">{{recipe.name}}</a></td>
                     <td>{{recipe.under_30}}</td>
                     <td >{{recipe.num_of_favorites}}</td>
-                    <td>
-                        <div class="flex justify-center">
-                            <div >
-                                <a href="/user/favorite/{{recipe.id}}" class="block border-b-2">favorite</a>
-                                <a href="/recipes/{{recipe.id}}">view</a> 
-                            </div>
-                            <div class="">
-                                {% if session.user_id == recipe.user_id %}
-                                <a href="/recipes/edit/{{recipe.id}}" class="block border-b-2">edit</a>
-                                <a href="/recipes/delete/{{recipe.id}}">delete</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

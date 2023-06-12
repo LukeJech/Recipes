@@ -15,7 +15,7 @@ th, td {
 }
 
 
-table {
+.recipe_table {
     background-image: url('../images/recipe_bg.jpg');
     background-repeat: no-repeat;
     background-position: center;

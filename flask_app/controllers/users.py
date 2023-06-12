@@ -37,6 +37,12 @@ def user_show_recipe_favorites():
     if 'user_id' in session:
         return render_template('user_favorites.html', favorites = user.User.get_user_favorite_recipes())
     return redirect('/')
+
+@app.route('/users/my_recipes')
+def show_user_recipes():
+    if 'user_id' not in session: return redirect('/')
+    return render_template('my_recipes.html')
+
 # Update Users Controller
 
 
