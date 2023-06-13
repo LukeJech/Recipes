@@ -87,27 +87,47 @@ class User:
         ON favorites.user_id = users.id
         JOIN recipes
         ON recipes.id = favorites.recipe_id
+        JOIN users as recipe_creator
+        ON recipes.user_id = recipe_creator.id
         WHERE users.id = %(id)s
         ;"""
         db_rows = connectToMySQL(cls.db).query_db(query,data)
-        this_user = cls(db_rows[0])
-        for row in db_rows:
-            this_user.recipe_favorites.append(recipe.Recipe(row))
-        return this_user.recipe_favorites
+        if db_rows:
+            this_user = cls(db_rows[0])
+            for row in db_rows:
+                this_recipe = recipe.Recipe(row)
+                recipe_creator_data = {
+                'id': row['recipe_creator.id'],
+                'first_name' : row['recipe_creator.first_name'],
+                'last_name' : row['recipe_creator.last_name'],
+                'email' : row['recipe_creator.email'],
+                'password' : row['recipe_creator.password'],
+                'created_at' : row['recipe_creator.created_at'],
+                'updated_at' : row['recipe_creator.updated_at'],
+                }
+                this_recipe.creator = cls(recipe_creator_data)
+                this_user.recipe_favorites.append(this_recipe)
+            return this_user.recipe_favorites
+        return False
     
     @classmethod
-    def get_user_recipes(cls, user_id):
+    def get_user_recipes(cls):
         data = {'id':session['user_id']}
         query = """
         SELECT *, 
         (
-        SELECT COUNT(*) from favorites
+        SELECT COUNT(*) FROM favorites
         WHERE favorites.recipe_id = recipes.id
-        ) as favorites_count
-        from recipes
-        where user_id = 2
+        ) AS favorites_count
+        FROM recipes
+        WHERE user_id = %(id)s
+        ORDER BY name ASC
         ;"""
-
+        results_list = connectToMySQL(cls.db).query_db(query, data)
+        my_recipes = []
+        for row in results_list:
+            my_recipes.append(recipe.Recipe(row))
+        return my_recipes
 
     # Update Users Models
 

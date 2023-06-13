@@ -12,19 +12,19 @@ def show_new_recipes_page():
     #validate recipe, create if valid, redirect to recipes page
     print(request.form)
     if recipe.Recipe.create_recipe(request.form):
-        return redirect('/recipes')
+        return redirect('/user/my_recipes')
     return render_template('new_recipe.html', recipe_info = request.form)
 
 
 # Read Recipe Controller
 @app.route('/')
 def home_page():
-    return render_template('home.html', random_recipe = recipe.Recipe.get_one_random_recipe_with_favorites() ,registration_info = None, login_email = '')
+    return render_template('home.html', random_recipes = recipe.Recipe.get_3_random_recipe_with_favorites() ,registration_info = None, login_email = '')
 
 @app.route('/recipes')
 def profile_page():
     if 'user_id' not in session: return redirect('/')
-    return render_template('recipes.html', top_recipes = recipe.Recipe.show_top_recipes_by_favorites())
+    return render_template('top_recipes.html', top_recipes = recipe.Recipe.show_top_recipes_by_favorites())
 
 
 
@@ -47,7 +47,8 @@ def show_all_recipes(order, sort):
 # Update Users Controller
 @app.route('/recipes/edit/<int:recipe_id>', methods=['POST', 'GET'])
 def update_recipe_page(recipe_id):
-    if 'user_id' not in session: return redirect('/')
+    if 'user_id' not in session or session['user_id'] != recipe.Recipe.get_recipe_by_id(recipe_id).user_id: 
+        return redirect('/')
     if request.method == 'GET':
         return render_template('edit_recipe.html', recipe = recipe.Recipe.get_recipe_by_id(recipe_id))
     if recipe.Recipe.update_recipe(request.form):

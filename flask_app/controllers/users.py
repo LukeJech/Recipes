@@ -22,7 +22,7 @@ def user_login_registration():
 def create_favorite_recipe(recipe_id):
     if 'user_id' in session:
         user.User.create_user_favorite_recipe(recipe_id)
-        return redirect('/recipes')
+        return redirect('/user/show/favorites')
     return redirect('/')
 
 # Read Users Controller
@@ -34,14 +34,14 @@ def user_logout():
 
 @app.route('/user/show/favorites')
 def user_show_recipe_favorites():
-    if 'user_id' in session:
-        return render_template('user_favorites.html', favorites = user.User.get_user_favorite_recipes())
-    return redirect('/')
+    if 'user_id' not in session: return redirect('/')
+    return render_template('user_favorites.html', favorites = user.User.get_user_favorite_recipes())
 
-@app.route('/users/my_recipes')
+
+@app.route('/user/my_recipes')
 def show_user_recipes():
     if 'user_id' not in session: return redirect('/')
-    return render_template('my_recipes.html')
+    return render_template('my_recipes.html', my_recipes = user.User.get_user_recipes())
 
 # Update Users Controller
 

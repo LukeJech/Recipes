@@ -21,7 +21,11 @@
             <div class="relative " id="dropdown_menu">
                 <img src="{{ url_for('static', filename='images/smiley_face.png') }}" class="w-16 h-16" id="hover_smiley" alt="smiley face signin dropdown">
                 <ul id="smile_dropdown" class="absolute hidden  bg-gray-50 shadlow-lg py-2 px-3 w-40 ">
-                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes">Recipes</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/">Home</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes">Top Recipes</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes/all">All Recipes</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes/new">Create Recipe</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/user/my_recipes">My Recipes</a></li>
                     <li class="hover:text-blue-400 cursor-pointer"><a href="/user/logout">Log Out</a></li>
                 </ul>
             </div>
@@ -32,10 +36,9 @@
     <div id="black_backdrop" class="hidden bg-black bg-opacity-20 absolute left-0 top-0 bottom-0 right-0 h-full w-full"></div>
     <div id="main_content" class="w-1/2 mx-auto mt-16 ">
         <h2 class="text-4xl font-semibold mb-6 rounded-lg">Favorite Recipes</h2>
-        <div class="flex">
-            <h3 class="font-semibold text-gray-800">{{session.first_name}} here are your favorites</h3>
-        </div>
-        <table class="border-2 border-black text-white text-lg w-full">
+        {% if favorites %}
+        <h3 class="font-semibold text-gray-800">{{session.first_name}} here are your favorites</h3>
+        <table class="recipe_table border-2 border-black text-white text-lg w-full">
             <thead>
                 <tr class="underline text-lg hover:bg-gray-800 hover:bg-opacity-20">
                     <th>Name</th>
@@ -53,6 +56,8 @@
                     <td>
                         <a href="/recipes/{{recipe.id}}">view</a> 
                         {% if session.user_id == recipe.user_id %}
+                        <p>{{session.user_id}}</p>
+                        <p>{{recipe.user_id}}</p>
                         <span>| </span>
                         <a href="/recipes/edit/{{recipe.id}}">edit</a>
                         <span>| </span>
@@ -63,6 +68,14 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <p>You have not favorited any recipe yet! Check out some recipes and favorite away!</p>
+        <ul class="flex flex-col mt-4">
+            <a href="/">• Random Recipes</a>
+            <a href="/recipes">• Top 5 Recipes</a>
+            <a href="/recipes/all">• All Recipes</a>
+        </ul>
+        {% endif %}
     </div>
 </body>
 </html>

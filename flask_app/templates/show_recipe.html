@@ -21,8 +21,12 @@
             <div class="relative " id="dropdown_menu">
                 <img src="{{ url_for('static', filename='images/smiley_face.png') }}" class="w-16 h-16" id="hover_smiley" alt="smiley face signin dropdown">
                 <ul id="smile_dropdown" class="absolute hidden  bg-gray-50 shadlow-lg py-2 px-3 w-40 ">
-                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes">Recipes</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/">Home</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes">Top Recipes</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes/all">All Recipes</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/recipes/new">Create Recipe</a></li>
                     <li class="hover:text-blue-400 cursor-pointer"><a href="/user/show/favorites">My Favorites</a></li>
+                    <li class="hover:text-blue-400 cursor-pointer"><a href="/user/my_recipes">My Recipes</a></li>
                     <li class="hover:text-blue-400 cursor-pointer"><a href="/user/logout">Log Out</a></li>
                     
                 </ul>
@@ -53,8 +57,8 @@
             <div class="flex gap-2">
                 <h3 class="w-1/3">Date Made:</h3>
                 <p class="w-2/3">{{ recipe.date_made}}</p>
-
             </div>
+            <a href="/user/favorite/{{recipe.id}}" type="submit" class="mt-6 rounded border-2 border-green-300 block w-1/4 ml-auto text-center px-4 py-2 text-sm font-medium uppercase text-gray-400 transition duration-150 ease-in-out hover:border-green-400 hover:bg-green-300 hover:bg-opacity-50 hover:text-white">Favorite Recipe</a>
         </div>
     </div>
 </body>

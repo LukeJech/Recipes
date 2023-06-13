@@ -13,16 +13,26 @@ bcrypt = Bcrypt(app)
 class Recipe:
     db = "recipes_db" #which database are you using for this project
     def __init__(self, data):
-        if 'recipe.id' in data:
-            self.id = data['recipe.id']
+        if 'recipes.user_id' in data:
+            self.id = data['recipes.id']
+            self.user_id = data['recipes.user_id']
+            self.name = data['name']
+            self.description = data['description']
+            self.instructions = data['instructions']
+            self.date_made = data['date_made']
+            self.under_30 = data['under_30']
+            self.created_at = data['recipes.created_at']
+            self.updated_at = data['recipes.updated_at'] 
+        elif 'recipes.id' in data:
+            self.id = data['recipes.id']
             self.user_id = data['user_id']
             self.name = data['name']
             self.description = data['description']
             self.instructions = data['instructions']
             self.date_made = data['date_made']
             self.under_30 = data['under_30']
-            self.created_at = data['recipe.created_at']
-            self.updated_at = data['recipe.updated_at']
+            self.created_at = data['recipes.created_at']
+            self.updated_at = data['recipes.updated_at']
         else:
             self.id = data['id']
             self.user_id = data['user_id']
@@ -124,7 +134,7 @@ class Recipe:
         return top_five_recipes
     
     @classmethod
-    def get_one_random_recipe_with_favorites(cls):
+    def get_3_random_recipe_with_favorites(cls):
         query = """
         SELECT recipes.*, users.*,
         (
@@ -134,12 +144,17 @@ class Recipe:
         FROM recipes
         JOIN users ON recipes.user_id = users.id
         ORDER BY RAND()
-        LIMIT 1
+        LIMIT 3
         ;"""
         result_list = connectToMySQL(cls.db).query_db(query)
-        this_recipe = cls(result_list[0])
-        this_recipe.creator = user.User(result_list[0])
-        return this_recipe
+        if result_list:
+            random_recipes = []
+            for row in result_list:
+                this_recipe = cls(row)
+                this_recipe.creator = user.User(row)
+                random_recipes.append(this_recipe)
+            return random_recipes
+        return False
 
     # Update Recipes Models
     @classmethod
